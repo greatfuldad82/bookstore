@@ -15,24 +15,48 @@ function App() {
 
   useEffect(fetchBooks, [])
 
-  const handleAddToFavs = (book) => {
-    setFavoriteBooks([...favoriteBooks, book])
-  }  
+  const handleAddToFavs = (bookInfo, isFav) => {
+    const isFavorite = favoriteBooks.find(
+      (favoriteBook) => favoriteBook.isbn13 === bookInfo.isbn13
+    )
+    if (!isFavorite) {
+      setFavoriteBooks([...favoriteBooks, bookInfo])
+      }  
+
+    const removeFav = favoriteBooks.filter(
+      (book) => book.isbn13 !== bookInfo.isbn13)
+      
+
+      if (isFav) {
+        setFavoriteBooks(removeFav);
+      }
+    }
+    
 
   //when fetching from an api we want the funcdtion above to 
   //run - now we will use useEffect;
   
   return (
     <div>
+      <h2>Favorite Books</h2>
+      <div className='books-container'>
+        {favoriteBooks.map((book) => (
+          <BookCard key={book.isbn13} bookInfo={book} />
+        ))}
+      </div>
        <h2>Books Available</h2>
        <div className='books-container'>
        {books.map((book) => (
-       <BookCard key={book.isbn13} bookInfo={book} handleAddToFavs={handleAddToFavs} />
-      
-    ))}
+       <BookCard 
+       key={book.isbn13} 
+       bookInfo={book} 
+       handleAddToFavs={handleAddToFavs} 
+       />
+      ))}
     </div>
   </div>
   )
 }
 
 export default App;
+
